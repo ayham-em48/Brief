@@ -1,0 +1,43 @@
+h1{
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 100px;
+    margin: 20px;
+}
+.wikiContent{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: large;
+    padding-left: 60px;
+    padding-right: 60px;
+    padding-top: 10px;
+}
+.searchContainer{
+    margin: auto;
+    width: 50%;
+    display: block;
+}
+.searchInput{
+    display: block;
+    margin: auto;
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: medium;
+}
+.seachButton{
+    display: block;
+    margin: auto;
+    width: 200px;
+    border-radius: 8px;
+    border-color: black;
+    border-style:solid;
+    background-color: black;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.seachButton:active{
+    background-color: white;
+    color: black;
+}
