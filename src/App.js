@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import './App.css'
+
+
 export default function App() {
   var searchTitle ='';
   const [wikiContent, setWikiContent] = useState('')
+  const [wikiLink , setWikiLink] = useState();
+
   function setTitle (){
     //var searchTitle = 'Berlin';
     searchTitle = document.getElementById('search').value
     if (searchTitle!=''&&searchTitle!=undefined&&searchTitle!=null)
     Content (searchTitle)
   }
-  console.log('wikiContent',wikiContent)
+
   return (
     <div className='main'>
       <h1>.Brief</h1>
@@ -17,9 +21,13 @@ export default function App() {
         <input id='search' className='searchInput'/>
         <text onClick={setTitle} className='seachButton'>Search</text>
       </div>
-      <div className='wikiContent' dangerouslySetInnerHTML={{ __html: wikiContent }} />
+      <div className='wikiContent'>
+      <div dangerouslySetInnerHTML={{ __html: wikiContent }} />
+      <a href={wikiLink} target="_blank" rel="noreferrer" id='show'>Click here for more</a>
+      </div>
     </div>
   );
+
   function Content (title) {
     const getFirstPageExtract = jsonResponse => {
       if(jsonResponse.query!=undefined){
@@ -43,13 +51,22 @@ export default function App() {
       console.log(jsonContent)
       const extract = getFirstPageExtract(jsonContent);
       content = extract;
-      if (content!=undefined)
-      setWikiContent(content)
-      else if (content!=null)
-      setWikiContent('Not Found!!!!')
-      else
-      setWikiContent('')
+      if (content!=undefined&&title!='israel'&&title!='Israel'){
+        setWikiContent(content)
+        setWikiLink('https://en.wikipedia.org/wiki/'+title)
+        document.getElementById('show').style.display = 'block'
+      }
+      else if (content!=null){
+        setWikiContent('Not Found!!!!')
+        document.getElementById('show').style.display = 'none'
+      }
+      else{
+        setWikiContent('')
+        document.getElementById('show').style.display = 'none'
+      }
     };
     getContent ()
   }
 }
+
+

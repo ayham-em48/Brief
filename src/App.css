@@ -3,7 +3,8 @@ h1{
     width: 100%;
     text-align: center;
     font-size: 100px;
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 .wikiContent{
     font-family: Georgia, 'Times New Roman', Times, serif;
@@ -15,13 +16,12 @@ h1{
 .searchContainer{
     margin: auto;
     width: 50%;
-    display: block;
 }
 .searchInput{
     display: block;
     margin: auto;
-    margin-bottom: 10px;
-    width: 100%;
+    margin-bottom: 20px;
+    width: 80%;
     font-size: medium;
 }
 .seachButton{
@@ -34,10 +34,33 @@ h1{
     background-color: black;
     color: white;
     padding: 5px;
+    margin-bottom: 20px;
     text-align: center;
     cursor: pointer;
+    transition: 0.3s;
 }
-.seachButton:active{
+.seachButton:hover{
     background-color: white;
     color: black;
+}
+#show{
+    display: none;
+}
+a{
+    padding: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 50px;
+    text-decoration: none;
+    text-align: center;
+    border-style:solid;
+    border-color: black;
+    background-color: white;
+    color: black;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+a:hover{
+    background-color: black;
+    color: white;
 }
