@@ -1,72 +1,103 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import { useRef, useState } from 'react';
 import './App.css'
+import ErrorModal from './ErrorModal';
 
 
 export default function App() {
-  var searchTitle ='';
-  const [wikiContent, setWikiContent] = useState('')
-  const [wikiLink , setWikiLink] = useState();
 
-  function setTitle (){
-    //var searchTitle = 'Berlin';
-    searchTitle = document.getElementById('search').value
-    if (searchTitle!=''&&searchTitle!=undefined&&searchTitle!=null)
-    Content (searchTitle)
+  let searchRef = useRef();
+  const [errorMessageAppear, setErrorMessageAppear] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [wikiContent, setWikiContent] = useState('');
+  const [wikiLink , setWikiLink] = useState();
+  let url = "https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles="
+
+  // setting the title of the desired searched content
+  function setTitle (evt){
+    evt.preventDefault()
+    const searchTitle = searchRef.current.value;
+    if (searchTitle){
+      if (searchTitle.toLowerCase()!='israel'){
+        url += searchTitle;
+        setWikiLink("https://en.wikipedia.org/wiki/"+searchTitle);
+        getContent ()
+      }else{
+        setErrorMessageAppear(true);
+        setErrorMessage('You mean Palestine?');
+      }
+    }
   }
 
-  return (
-    <div className='main'>
-      <h1>.Brief</h1>
-      <div className='searchContainer'>
-        <input id='search' className='searchInput'/>
-        <text onClick={setTitle} className='seachButton'>Search</text>
-      </div>
-      <div className='wikiContent'>
-      <div dangerouslySetInnerHTML={{ __html: wikiContent }} />
-      <a href={wikiLink} target="_blank" rel="noreferrer" id='show'>Click here for more</a>
-      </div>
-    </div>
-  );
-
-  function Content (title) {
+  // getting content from wikipedia
+  function getContent () {
     const getFirstPageExtract = jsonResponse => {
       if(jsonResponse.query!=undefined){
         // You should probably add some validathin here to make sure pages exists
         const pages = jsonResponse.query.pages;
         const pageIds = Object.keys(pages);
         // Here we only take the first response since we know there is only one.
-        const firstPageId = pageIds.length ? pageIds[0] : null;
-        return firstPageId ? pages[firstPageId].extract : null;
+        if(pageIds!=-1){
+          const firstPageId = pageIds.length ? pageIds[0] : null;
+          return firstPageId ? pages[firstPageId].extract : null;
+        }else{
+          setErrorMessageAppear(true);
+          setErrorMessage('Not Found!!');
+        }
       }
       else
       return null
     };
-    var content = ''  
-    const url =
-      "https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles="+title;
-  
-    async function getContent (){
-      const response = await fetch(url);
-      const jsonContent = await response.json();
-      console.log(jsonContent)
-      const extract = getFirstPageExtract(jsonContent);
-      content = extract;
-      if (content!=undefined&&title!='israel'&&title!='Israel'){
-        setWikiContent(content)
-        setWikiLink('https://en.wikipedia.org/wiki/'+title)
-        document.getElementById('show').style.display = 'block'
+    async function fetchContent (){
+      try{
+        const response = await fetch(url);
+        const jsonContent = await response.json();
+        const extract = getFirstPageExtract(jsonContent);
+        setWikiContent(extract)
+      } catch(error){
+        setErrorMessageAppear(true);
+        setErrorMessage("error");
       }
-      else if (content!=null){
-        setWikiContent('Not Found!!!!')
-        document.getElementById('show').style.display = 'none'
-      }
-      else{
-        setWikiContent('')
-        document.getElementById('show').style.display = 'none'
-      }
-    };
-    getContent ()
+    }
+    try{
+      fetchContent ()
+    }catch(error){
+      setErrorMessageAppear(true);
+      setErrorMessage(error);
+    }
+    
   }
+
+  const closeModal = () => {
+    setErrorMessageAppear(false)
+  }
+
+  return (
+    <>
+    {errorMessageAppear?<ErrorModal closeModal={closeModal} errorMessage={errorMessage}/>:null}
+    <div className='main'>
+      <h1>.Brief</h1>
+      <div className='searchContainer'>
+        {/* <input ref={searchRef} id='search' className='searchInput' onKeyUp={() => {event.key==="Enter"?setTitle():null}}/>
+        <text onClick={setTitle} className='mainButton'>Search</text> */}
+        <form onSubmit={setTitle}>
+          <input ref={searchRef} id='search' className='searchInput'/>
+          <button type='submit' className='mainButton'>Search</button>
+        </form>
+      </div>
+      <div className='wikiContent'>
+        {
+          wikiContent? 
+            <>
+            <div dangerouslySetInnerHTML={{ __html: wikiContent }} />
+            <a href={wikiLink} target="_blank" rel="noreferrer" id='show' className='mainButton'>Click here for more</a>
+            </>
+           :null
+        }
+      </div>
+    </div>
+    </>
+  );
 }
 
 
