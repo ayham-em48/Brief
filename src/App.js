@@ -76,21 +76,21 @@ export default function App() {
     <>
     {errorMessageAppear?<ErrorModal closeModal={closeModal} errorMessage={errorMessage}/>:null}
     <div className='main'>
-      <h1>.Brief</h1>
+      <h1 data-test="main-header">.Brief</h1>
       <div className='searchContainer'>
         {/* <input ref={searchRef} id='search' className='searchInput' onKeyUp={() => {event.key==="Enter"?setTitle():null}}/>
         <text onClick={setTitle} className='mainButton'>Search</text> */}
-        <form onSubmit={setTitle}>
-          <input ref={searchRef} id='search' className='searchInput'/>
-          <button type='submit' className='mainButton'>Search</button>
+        <form onSubmit={setTitle} className='actionFrom' data-test="search-form">
+          <input data-test="search-input" ref={searchRef} id='search' className='searchInput'/>
+          <button data-test="search-button" type='submit' className='mainButton'>Search</button>
         </form>
       </div>
       <div className='wikiContent'>
         {
           wikiContent? 
             <>
-            <div dangerouslySetInnerHTML={{ __html: wikiContent }} />
-            <a href={wikiLink} target="_blank" rel="noreferrer" id='show' className='mainButton'>Click here for more</a>
+            <div data-test="search-results" className='results' dangerouslySetInnerHTML={{ __html: wikiContent }} />
+            <a data-test="search-results-button" href={wikiLink} target="_blank" rel="noreferrer" id='show' className='mainButton'>Click here for more</a>
             </>
            :null
         }
