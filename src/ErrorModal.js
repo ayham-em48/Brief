@@ -8,10 +8,10 @@ export default function ErrorModal(props) {
     return (
         <div className='mainErrorContainer'>
             <div className='errorBackground'></div>
-            <div className='errorContainer'>
+            <div className='errorContainer' data-test="error-container">
                 <div className='textContainer'>
-                    <p>{props.errorMessage}</p>
-                    <a onClick={props.closeModal} className='mainButton'>close</a>
+                    <p data-test="error-text">{props.errorMessage}</p>
+                    <a onClick={props.closeModal} className='mainButton' data-test="error-button">close</a>
                 </div>
             </div>
         </div>
